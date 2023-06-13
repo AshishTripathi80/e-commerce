@@ -1,31 +1,20 @@
-package com.customerservice.models;
+package com.customerservice.dto;
 
-import com.customerservice.validation.ValidPassword;
-import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Customer {
+public class CustomerResponseDTO {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
-    @Column(unique = true)
     @Email(message = "Please provide a valid email address")
     private String email;
-
-    @ValidPassword(message = "Password must be at least 5 characters long")
-
-    private String password;
 
     @Size(min = 2, max = 10, message = "First name must be between 2 and 10 characters")
     private String firstName;

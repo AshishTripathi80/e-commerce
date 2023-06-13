@@ -3,18 +3,23 @@ package com.customerservice.exceptions;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class InvalidCustomerDataException extends RuntimeException {
+public class ErrorResponse {
     private LocalDateTime timestamp;
+    private String errorMsg;
     private List<String> errors;
 
-    public InvalidCustomerDataException(String message, LocalDateTime localDateTime, List<String> errors) {
-        super(message);
-        this.timestamp = LocalDateTime.now();
+    public ErrorResponse(String errorMsg, LocalDateTime timestamp, List<String> errors) {
+        this.timestamp = timestamp;
+        this.errorMsg = errorMsg;
         this.errors = errors;
     }
 
     public LocalDateTime getTimestamp() {
         return timestamp;
+    }
+
+    public String getErrorMsg() {
+        return errorMsg;
     }
 
     public List<String> getErrors() {

@@ -1,6 +1,7 @@
 package com.customerservice.handler;
 
 import com.customerservice.exceptions.CustomerNotFoundException;
+import com.customerservice.exceptions.ErrorResponse;
 import com.customerservice.exceptions.InvalidCustomerDataException;
 import com.customerservice.exceptions.UserAlreadyExistsException;
 import org.springframework.http.HttpStatus;
@@ -12,8 +13,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(InvalidCustomerDataException.class)
-    public ResponseEntity<String> handleInvalidCustomerDataException(InvalidCustomerDataException ex) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    public ResponseEntity<ErrorResponse> handleInvalidCustomerDataException(InvalidCustomerDataException ex) {
+        ErrorResponse errorResponse = new ErrorResponse("Validation Failed!", ex.getTimestamp(), ex.getErrors());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
 
 

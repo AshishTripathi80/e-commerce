@@ -1,20 +1,17 @@
 package com.customerservice.controller;
 
+import com.customerservice.dto.CustomerResponseDTO;
 import com.customerservice.enums.Constants;
 import com.customerservice.exceptions.CustomerNotFoundException;
-import com.customerservice.exceptions.InvalidCustomerDataException;
 import com.customerservice.exceptions.UserAlreadyExistsException;
 import com.customerservice.models.Customer;
 import com.customerservice.services.CustomerService;
-
-import jakarta.validation.*;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,18 +27,14 @@ public class CustomerController {
 
     // Create a new customer
     @PostMapping()
-    public Customer createCustomer(@Valid @RequestBody Customer customer, BindingResult bindingResult) {
+    public CustomerResponseDTO createCustomer(@Valid @RequestBody Customer customer, BindingResult bindingResult) {
         logger.info("Received request to create a new customer");
 
         // Check for validation errors
         customerService.validationError(bindingResult);
 
-        String email = customer.getEmail();
-        Customer existingCustomer = customerService.getCustomerByEmail(email);
-
-        if (existingCustomer != null) {
-            throw new UserAlreadyExistsException(Constants.ERROR_USER_ALREADY_EXISTS.getMessage() + email);
-        }
+        //Check if user is already present with email
+        customerService.isCustomerAlreadyPresent(customer);
 
         // Encrypt the password
         String encryptedPassword = customerService.encryptPassword(customer.getPassword());
@@ -49,9 +42,10 @@ public class CustomerController {
         // Set the encrypted password in the Customer object
         customer.setPassword(encryptedPassword);
 
-        return customerService.createCustomer(customer);
-    }
+        Customer createdCustomer = customerService.createCustomer(customer);
 
+        return customerService.convertToResponseDTO(createdCustomer);
+    }
 
 
 
@@ -68,23 +62,21 @@ public class CustomerController {
         logger.info("Received request to get customer by ID: {}", id);
         Customer customer = customerService.getCustomerById(id);
         if (customer == null) {
-            throw new CustomerNotFoundException(Constants.ERROR_CUSTOMER_NOT_FOUND.getMessage()+ id);
+            throw new CustomerNotFoundException(Constants.ERROR_CUSTOMER_NOT_FOUND.getMessage() + id);
         }
         return customer;
     }
-
 
     // Get a customer by email
     @GetMapping("/email/{email}")
     public Customer getCustomerByEmail(@PathVariable String email) {
         logger.info("Received request to get customer by email: {}", email);
-        Customer customer=customerService.getCustomerByEmail(email);
-        if(customer==null){
-            throw new CustomerNotFoundException(Constants.ERROR_CUSTOMER_NOT_FOUND.getMessage()+ email);
+        Customer customer = customerService.getCustomerByEmail(email);
+        if (customer == null) {
+            throw new CustomerNotFoundException(Constants.ERROR_CUSTOMER_NOT_FOUND.getMessage() + email);
         }
         return customer;
     }
-
 
     // Update a customer by ID
     @PutMapping("/{id}")
@@ -112,7 +104,6 @@ public class CustomerController {
         existingCustomer.setPassword(encryptedPassword);
 
 
-
         return customerService.updateCustomer(existingCustomer);
     }
 
@@ -125,9 +116,7 @@ public class CustomerController {
             customerService.deleteCustomer(customer);
             return ResponseEntity.ok().body("Customer deleted successfully");
         } else {
-            throw new CustomerNotFoundException(Constants.ERROR_CUSTOMER_NOT_FOUND.getMessage()+ id);
+            throw new CustomerNotFoundException(Constants.ERROR_CUSTOMER_NOT_FOUND.getMessage() + id);
         }
     }
-
-
 }
