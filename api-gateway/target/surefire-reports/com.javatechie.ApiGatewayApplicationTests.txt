@@ -1,0 +1,7 @@
+-------------------------------------------------------------------------------
+Test set: com.javatechie.ApiGatewayApplicationTests
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 0.239 s <<< FAILURE! - in com.javatechie.ApiGatewayApplicationTests
+com.javatechie.ApiGatewayApplicationTests  Time elapsed: 0.237 s  <<< ERROR!
+java.lang.IllegalStateException: Found multiple @SpringBootConfiguration annotated classes [Generic bean: class [com.javatechie.ApiGatewayApplication]; scope=; abstract=false; lazyInit=null; autowireMode=0; dependencyCheck=0; autowireCandidate=true; primary=false; factoryBeanName=null; factoryMethodName=null; initMethodNames=null; destroyMethodNames=null; defined in file [D:\Booking System New\api-gateway\target\classes\com\javatechie\ApiGatewayApplication.class], Generic bean: class [com.javatechie.SwiggyGatewayApplication]; scope=; abstract=false; lazyInit=null; autowireMode=0; dependencyCheck=0; autowireCandidate=true; primary=false; factoryBeanName=null; factoryMethodName=null; initMethodNames=null; destroyMethodNames=null; defined in file [D:\Booking System New\api-gateway\target\classes\com\javatechie\SwiggyGatewayApplication.class]]
+

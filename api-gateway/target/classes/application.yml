@@ -1,0 +1,46 @@
+spring:
+ cloud:
+   gateway:
+     routes:
+
+       - id: customer-service
+         uri: lb://customer-service
+         predicates:
+           - Path=/api/customers/**
+         filters:
+           - AuthenticationFilter
+
+
+       - id: product-service
+         uri: lb://product-service
+         predicates:
+           - Path=/api/products/**
+         filters:
+           - AuthenticationFilter
+
+       - id: order-service
+         uri: lb://order-service
+         predicates:
+           - Path=/api/orders/**
+         filters:
+           - AuthenticationFilter
+
+
+       - id: auth-service
+         uri: lb://auth-service
+         predicates:
+           - Path=/auth/**
+#         filters:
+#           - AuthenticationFilter
+
+
+
+ application:
+   name: API-GATEWAY
+
+eureka:
+  client:
+    service-url:
+      defaultZone : http://localhost:8761/eureka/
+
+

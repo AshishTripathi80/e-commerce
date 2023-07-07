@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AuthService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">user-name</a> &gt; <a href="index.source.html" class="el_package">com.javatechie.service</a> &gt; <span class="el_source">AuthService.java</span></div><h1>AuthService.java</h1><pre class="source lang-java linenums">package com.javatechie.service;
+
+import com.javatechie.entity.UserCredential;
+import com.javatechie.repository.UserCredentialRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Service
+<span class="fc" id="L12">public class AuthService {</span>
+
+    @Autowired
+    private UserCredentialRepository repository;
+
+    @Autowired
+    private JwtService jwtService;
+
+    public String saveUser(UserCredential credential) {
+<span class="nc" id="L21">        repository.save(credential);</span>
+<span class="nc" id="L22">        return &quot;user added to the system&quot;;</span>
+    }
+
+    public String generateToken(String username) {
+<span class="nc" id="L26">        return jwtService.generateToken(username);</span>
+    }
+
+    public void validateToken(String token) {
+<span class="nc" id="L30">        jwtService.validateToken(token);</span>
+<span class="nc" id="L31">    }</span>
+
+
+    public void generateAndSaveUser() {
+<span class="fc" id="L35">        List&lt;UserCredential&gt; userCredentials=new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L36">        userCredentials.add(new UserCredential(1,&quot;ashish&quot;,&quot;ashish&quot;,null));</span>
+<span class="fc" id="L37">        userCredentials.add(new UserCredential(2,&quot;abc&quot;,&quot;abc&quot;,null));</span>
+<span class="fc" id="L38">        userCredentials.add(new UserCredential(3,&quot;123&quot;,&quot;123&quot;,null));</span>
+<span class="fc" id="L39">        repository.saveAll(userCredentials);</span>
+
+<span class="fc" id="L41">    }</span>
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

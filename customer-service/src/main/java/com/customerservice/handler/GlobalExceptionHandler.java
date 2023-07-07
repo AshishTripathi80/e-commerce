@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+
     @ExceptionHandler(InvalidCustomerDataException.class)
     public ResponseEntity<ErrorResponse> handleInvalidCustomerDataException(InvalidCustomerDataException ex) {
         ErrorResponse errorResponse = new ErrorResponse("Validation Failed!", ex.getTimestamp(), ex.getErrors());

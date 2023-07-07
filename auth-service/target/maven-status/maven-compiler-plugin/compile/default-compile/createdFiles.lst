@@ -1,0 +1,6 @@
+com\javatechie\UserServiceApplication.class
+com\javatechie\controller\AuthController.class
+com\javatechie\service\AuthService.class
+com\javatechie\repository\UserCredentialRepository.class
+com\javatechie\entity\UserCredential.class
+com\javatechie\service\JwtService.class

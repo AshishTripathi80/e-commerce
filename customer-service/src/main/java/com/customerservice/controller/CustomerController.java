@@ -1,9 +1,6 @@
 package com.customerservice.controller;
-
-import com.customerservice.dto.CustomerResponseDTO;
 import com.customerservice.enums.Constants;
 import com.customerservice.exceptions.CustomerNotFoundException;
-import com.customerservice.exceptions.UserAlreadyExistsException;
 import com.customerservice.models.Customer;
 import com.customerservice.services.CustomerService;
 import jakarta.validation.Valid;
@@ -26,31 +23,15 @@ public class CustomerController {
     private CustomerService customerService;
 
     // Create a new customer
-    @PostMapping()
-    public CustomerResponseDTO createCustomer(@Valid @RequestBody Customer customer, BindingResult bindingResult) {
+    @PostMapping
+    public Customer createCustomer(@Valid @RequestBody Customer customer, BindingResult bindingResult) {
         logger.info("Received request to create a new customer");
 
-        // Check for validation errors
-        customerService.validationError(bindingResult);
-
-        //Check if user is already present with email
-        customerService.isCustomerAlreadyPresent(customer);
-
-        // Encrypt the password
-        String encryptedPassword = customerService.encryptPassword(customer.getPassword());
-
-        // Set the encrypted password in the Customer object
-        customer.setPassword(encryptedPassword);
-
-        Customer createdCustomer = customerService.createCustomer(customer);
-
-        return customerService.convertToResponseDTO(createdCustomer);
+        return customerService.getCreatedCustomer(customer, bindingResult);
     }
 
-
-
     //Get all customer
-    @GetMapping()
+    @GetMapping
     public List<Customer> getAllCustomers() {
         logger.info("Received request to get all customers");
         return customerService.getAllCustomers();
@@ -60,11 +41,7 @@ public class CustomerController {
     @GetMapping("/{id}")
     public Customer getCustomerById(@PathVariable Long id) {
         logger.info("Received request to get customer by ID: {}", id);
-        Customer customer = customerService.getCustomerById(id);
-        if (customer == null) {
-            throw new CustomerNotFoundException(Constants.ERROR_CUSTOMER_NOT_FOUND.getMessage() + id);
-        }
-        return customer;
+        return customerService.getCustomerById(id);
     }
 
     // Get a customer by email
@@ -83,29 +60,12 @@ public class CustomerController {
     public Customer updateCustomer(@PathVariable Long id, @Valid @RequestBody Customer updatedCustomer, BindingResult bindingResult) {
         logger.info("Received request to update customer with ID: {}", id);
 
-        // Check for validation errors
-        customerService.validationError(bindingResult);
-
-        Customer existingCustomer = customerService.getCustomerById(id);
-
-        if (existingCustomer == null) {
-            throw new CustomerNotFoundException(Constants.ERROR_CUSTOMER_NOT_FOUND.getMessage() + id);
-        }
-
-        // Copy the updated fields to the existing customer
-        existingCustomer.setFirstName(updatedCustomer.getFirstName());
-        existingCustomer.setEmail(updatedCustomer.getEmail());
-        existingCustomer.setLastName(updatedCustomer.getLastName());
-
-        // Encrypt the password
-        String encryptedPassword = customerService.encryptPassword(updatedCustomer.getPassword());
-
-        // Set the encrypted password in the Customer object
-        existingCustomer.setPassword(encryptedPassword);
+        Customer existingCustomer = customerService.updateCustomer(id, updatedCustomer, bindingResult);
 
 
-        return customerService.updateCustomer(existingCustomer);
+        return customerService.createCustomer(existingCustomer);
     }
+
 
     // Delete a customer by ID
     @DeleteMapping("/{id}")

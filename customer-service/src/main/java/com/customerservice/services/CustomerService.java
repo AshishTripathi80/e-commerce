@@ -1,7 +1,6 @@
 package com.customerservice.services;
-
-import com.customerservice.dto.CustomerResponseDTO;
 import com.customerservice.enums.Constants;
+import com.customerservice.exceptions.CustomerNotFoundException;
 import com.customerservice.exceptions.InvalidCustomerDataException;
 import com.customerservice.exceptions.UserAlreadyExistsException;
 import com.customerservice.models.Customer;
@@ -41,7 +40,7 @@ public class CustomerService {
      */
     public Customer getCustomerById(Long id) {
         return customerRepository.findById(id)
-                .orElse(null);
+                .orElseThrow(() -> new CustomerNotFoundException(Constants.ERROR_CUSTOMER_NOT_FOUND.getMessage() + id));
     }
 
     /**
@@ -71,16 +70,6 @@ public class CustomerService {
      */
     public List<Customer> getAllCustomers() {
         return customerRepository.findAll();
-    }
-
-    /**
-     * Update a customer.
-     *
-     * @param customer The customer object to update.
-     * @return The updated customer.
-     */
-    public Customer updateCustomer(Customer customer) {
-        return customerRepository.save(customer);
     }
 
     /**
@@ -115,22 +104,14 @@ public class CustomerService {
         return passwordEncoder.encode(password);
     }
 
+
+
     /**
-     * Convert a Customer object to a CustomerResponseDTO object.
+     * Check if a customer with the same email already exists.
+     * If a customer with the same email exists, throw an exception.
      *
-     * @param customer The customer to convert.
-     * @return The converted CustomerResponseDTO.
+     * @param customer The customer to check.
      */
-    public com.customerservice.dto.CustomerResponseDTO convertToResponseDTO(Customer customer) {
-        return new CustomerResponseDTO(
-                customer.getId(),
-                customer.getEmail(),
-                customer.getFirstName(),
-                customer.getLastName()
-        );
-    }
-
-
     public void isCustomerAlreadyPresent(Customer customer) {
         String email = customer.getEmail();
         Customer existingCustomer = customerRepository.findByEmail(email);
@@ -140,4 +121,59 @@ public class CustomerService {
         }
     }
 
+
+    /**
+     * Create a new customer after performing necessary validations and checks.
+     *
+     * @param customer      The customer to be created.
+     * @param bindingResult The BindingResult object containing validation errors.
+     * @return The created customer.
+     */
+    public Customer getCreatedCustomer(Customer customer, BindingResult bindingResult) {
+        // Check for validation errors
+        validationError(bindingResult);
+
+        // Check if user is already present with email
+        isCustomerAlreadyPresent(customer);
+
+        // Encrypt the password
+        String encryptedPassword = encryptPassword(customer.getPassword());
+
+        // Set the encrypted password in the Customer object
+        customer.setPassword(encryptedPassword);
+
+        return createCustomer(customer);
+    }
+
+
+    /**
+     * Update an existing customer after performing necessary validations and checks.
+     *
+     * @param id              The ID of the customer to update.
+     * @param updatedCustomer The updated customer data.
+     * @param bindingResult   The BindingResult object containing validation errors.
+     * @return The updated customer.
+     */
+    public Customer updateCustomer(Long id, Customer updatedCustomer, BindingResult bindingResult) {
+        // Check for validation errors
+        validationError(bindingResult);
+
+        Customer existingCustomer = getCustomerById(id);
+
+        if (existingCustomer == null) {
+            throw new CustomerNotFoundException(Constants.ERROR_CUSTOMER_NOT_FOUND.getMessage() + id);
+        }
+
+        // Copy the updated fields to the existing customer
+        existingCustomer.setFirstName(updatedCustomer.getFirstName());
+        existingCustomer.setEmail(updatedCustomer.getEmail());
+        existingCustomer.setLastName(updatedCustomer.getLastName());
+
+        // Encrypt the password
+        String encryptedPassword = encryptPassword(updatedCustomer.getPassword());
+
+        // Set the encrypted password in the Customer object
+        existingCustomer.setPassword(encryptedPassword);
+        return existingCustomer;
+    }
 }

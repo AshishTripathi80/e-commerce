@@ -1,0 +1,6 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+user-name,com.javatechie,UserServiceApplication,5,3,0,0,2,1,1,1,1,1
+user-name,com.javatechie.entity,UserCredential,175,18,32,0,5,2,28,2,12,2
+user-name,com.javatechie.service,JwtService,49,3,0,0,12,1,4,1,4,1
+user-name,com.javatechie.service,AuthService,17,43,0,0,5,7,3,2,3,2
+user-name,com.javatechie.controller,AuthController,74,13,8,0,13,5,8,3,4,3
