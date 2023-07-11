@@ -1,7 +1,7 @@
 package com.authservice.service;
 
 import com.authservice.entity.UserCredential;
-import com.authservice.exceptions.InvalidUserDataException;
+import com.authservice.exception.InvalidUserDataException;
 import com.authservice.repository.UserCredentialRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -1,4 +1,4 @@
-package com.authservice.exceptions;
+package com.authservice.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

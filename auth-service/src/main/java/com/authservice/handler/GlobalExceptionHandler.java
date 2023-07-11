@@ -1,8 +1,8 @@
 package com.authservice.handler;
 
-import com.authservice.exceptions.ErrorResponse;
-import com.authservice.exceptions.InvalidUserDataException;
-import com.authservice.exceptions.UserNotFoundException;
+import com.authservice.exception.ErrorResponse;
+import com.authservice.exception.InvalidUserDataException;
+import com.authservice.exception.UserNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;

@@ -1,7 +1,7 @@
 package com.authservice;
 
 import com.authservice.entity.UserCredential;
-import com.authservice.exceptions.InvalidUserDataException;
+import com.authservice.exception.InvalidUserDataException;
 import com.authservice.repository.UserCredentialRepository;
 import com.authservice.service.AuthService;
 import com.authservice.service.JwtService;

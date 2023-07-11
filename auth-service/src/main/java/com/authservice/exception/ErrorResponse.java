@@ -1,4 +1,4 @@
-package com.authservice.exceptions;
+package com.authservice.exception;
 
 import java.time.LocalDateTime;
 import java.util.List;
